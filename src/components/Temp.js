@@ -76,28 +76,19 @@
 
 import React, { useState, useEffect } from "react";
 import Weathercard from "../Weathercard";
+import mockWeatherData from "./Weather Data/MockData.js";
 import "./css/style.css";
 
 const Temp = () => {
   const [searchValue, setSearchValue] = useState("");
-  const [tempInfo, setTempInfo] = useState({});
+  const [tempInfo, setTempInfo] = useState(null);
 
-  // Mock weather data
-  const mockWeatherData = {
-    temp: 25,
-    humidity: 60,
-    pressure: 1012,
-    weathermood: "Clear",
-    name: "Ahmedabad, Gujarat",
-    speed: 5,
-    country: "India",
-    sunset: 1620000000,
-  };
-
-  const getWeatherInfo = async () => {
-    // Simulating an API call
-    // Here, you can replace this with a real fetch if needed
-    setTempInfo(mockWeatherData);
+  const getWeatherInfo = () => {
+    // Simulate fetching data based on search value
+    const result = mockWeatherData.find((data) =>
+      data.name.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setTempInfo(result || null);
   };
 
   useEffect(() => {
@@ -105,10 +96,7 @@ const Temp = () => {
   }, []);
 
   const handleSearch = () => {
-    // Simulate fetching new data based on searchValue
-    if (searchValue) {
-      setTempInfo(mockWeatherData); // Use the same mock data
-    }
+    getWeatherInfo();
   };
 
   return (
@@ -131,8 +119,11 @@ const Temp = () => {
         </div>
       </div>
 
-      {/* Temp card */}
-      <Weathercard {...tempInfo} />
+      {tempInfo ? (
+        <Weathercard {...tempInfo} />
+      ) : (
+        <div className="no-data">No Data Found</div>
+      )}
     </>
   );
 };
